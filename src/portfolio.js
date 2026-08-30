@@ -1,6 +1,6 @@
 const header = {
   // all the properties are optional - can be left empty or deleted
-  homepage: 'https://CSKing666.github.io/portfolio',
+  homepage: 'https://csking666.github.io/portfolio/',
   title: 'WeSeeYes',
 }
 
@@ -46,7 +46,7 @@ const projects = [
       'Built a Personal website using below Tech Stack',
     stack: ['React', 'Node', 'SASS'],
     sourceCode: 'https://github.com/CSKing666/portfolio',
-    livePreview: 'https://github.com',
+    livePreview: 'https://csking666.github.io/portfolio/',
     image: 'Portfolio.png',
   },
 ]
