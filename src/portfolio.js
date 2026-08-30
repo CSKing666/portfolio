@@ -62,7 +62,6 @@ const skills = [
   'Django',
   'ETL Pipelines',
   'Data Analysis',
-  'Machine Learning',
   'AWS',
   'Linux',
   'Git',
