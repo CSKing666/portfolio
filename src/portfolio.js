@@ -54,20 +54,30 @@ const projects = [
 const skills = [
   // skills can be added or removed
   // if there are no skills, Skills section won't show up
-  'HTML',
-  'CSS',
-  'JavaScript',
-  'Java',
+  // Ordered to match the Data Engineer positioning: data and backend first,
+  // then the Java/Spring stack, then web and tooling.
   'Python',
-  'C',
+  'PostgreSQL',
+  'MySQL',
+  'Django',
+  'ETL Pipelines',
+  'Data Analysis',
+  'Machine Learning',
+  'AWS',
+  'Linux',
+  'Git',
+  'Java',
+  'Spring Boot',
+  'Spring MVC',
+  'Spring Data JPA',
+  'Hibernate',
   'Servlets',
   'JSP',
-  'Hibernate',
-  'SpringCore',
-  'SpringMVC',
-  'SpringJPA',
-  'SpringBoot',
-  'Django',
+  'JDBC',
+  'React',
+  'JavaScript',
+  'HTML',
+  'CSS',
 ]
 
 const contact = {
