@@ -11,7 +11,7 @@ const about = {
   picture: 'CS.jpg',
 
   description:
-    'Motivated software professional with 1.5 years of experience in software support, skilled in troubleshooting and understanding system workflows. Now transitioning into development roles, equipped with a solid foundation in core programming concepts like DSA, OOPs, and RDBMS.',
+    'Data Engineer building the platform behind a US real-estate analytics product — Django and PostgreSQL services, high-throughput ETL and scraping pipelines across 5,000+ ZIP codes, and the internal React tools the sales team runs on. Previously a software engineer across billing, CRM and channel-management systems, on a full stack Java foundation. Currently open to new opportunities.',
   resume: 'CS-Resume.pdf',
   social: {
     linkedin: 'https://www.linkedin.com/in/vannem-reddy-chandra-sekhar-337367429/',
