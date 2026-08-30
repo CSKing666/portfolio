@@ -1,0 +1,69 @@
+/* Design tokens. The `.dark` class on <html> swaps every value, which is what
+   all the semantic UnoCSS colours (bg, surface, fg, primary…) resolve to. It is
+   set by an inline script in index.html before paint, so there is no flash. */
+:root {
+  color-scheme: light;
+  --c-bg: #f7f8fb;
+  --c-surface: #ffffff;
+  --c-surface-2: #eef1f7;
+  --c-fg: #4a5568;
+  --c-fg-strong: #10172a;
+  --c-fg-muted: #6b7689;
+  --c-primary: #2563eb;
+  --c-primary-soft: #dbe6fe;
+  --c-border: #e3e8f0;
+
+  --shadow-card: 0 1px 2px rgba(16, 23, 42, 0.04), 0 8px 24px
+    rgba(16, 23, 42, 0.06);
+  --shadow-lift: 0 2px 4px rgba(16, 23, 42, 0.06), 0 18px 40px
+    rgba(16, 23, 42, 0.12);
+  --header-blur: rgba(247, 248, 251, 0.72);
+}
+
+.dark {
+  color-scheme: dark;
+  --c-bg: #10141f;
+  --c-surface: #171d2c;
+  --c-surface-2: #1f2739;
+  --c-fg: #a7b2c9;
+  --c-fg-strong: #e8eefc;
+  --c-fg-muted: #8592ab;
+  --c-primary: #7ea6ff;
+  --c-primary-soft: #24314e;
+  --c-border: #263048;
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-lift: 0 2px 6px rgba(0, 0, 0, 0.35), 0 18px 44px rgba(0, 0, 0, 0.45);
+  --header-blur: rgba(16, 20, 31, 0.72);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  background-color: var(--c-bg);
+}
+
+body {
+  /* Nothing should ever scroll sideways, at any width. */
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: var(--c-primary);
+  color: #fff;
+}
+
+/* Respect users who ask for less animation. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

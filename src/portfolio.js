@@ -14,7 +14,7 @@ const about = {
     'Motivated software professional with 1.5 years of experience in software support, skilled in troubleshooting and understanding system workflows. Now transitioning into development roles, equipped with a solid foundation in core programming concepts like DSA, OOPs, and RDBMS.',
   resume: 'CS-Resume.pdf',
   social: {
-    linkedin: 'https://www.linkedin.com/in/vannem-reddy-chandra-sekhar-784546188',
+    linkedin: 'https://www.linkedin.com/in/vannem-reddy-chandra-sekhar-337367429/',
     github: 'https://github.com/CSKing666',
   },
 }
@@ -45,7 +45,7 @@ const projects = [
     description:
       'Built a Personal website using below Tech Stack',
     stack: ['React', 'Node', 'SASS'],
-    sourceCode: 'https://github.com',
+    sourceCode: 'https://github.com/CSKing666/portfolio',
     livePreview: 'https://github.com',
     image: 'Portfolio.png',
   },
@@ -67,6 +67,7 @@ const skills = [
   'SpringMVC',
   'SpringJPA',
   'SpringBoot',
+  'Django',
 ]
 
 const contact = {
