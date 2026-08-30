@@ -7,7 +7,7 @@ const header = {
 const about = {
   // all the properties are optional - can be left empty or deleted
   name: 'Chandra Sekhar',
-  role: 'Java Full Stack Developer',
+  role: 'Data Engineer & Full Stack Developer',
   picture: 'CS.jpg',
 
   description:

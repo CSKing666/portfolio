@@ -10,7 +10,7 @@ const Contact = () => {
         <h2 className='section-title'>Let us work together</h2>
 
         <p className='mt-4 text-fg-muted'>
-          Open to Java full stack roles and interesting side projects.
+          Open to data engineering and full stack roles, and interesting side projects.
         </p>
 
         <a href={`mailto:${contact.email}`} className='btn-primary mt-8'>
