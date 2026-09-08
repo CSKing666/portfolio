@@ -53,7 +53,9 @@ export default defineConfig({
   },
   shortcuts: [
     // Layout
-    ['shell', 'w-full max-w-[68rem] mx-auto px-5 sm:px-8'],
+    // 84rem is wide enough for four project cards in a row at xl; the text
+    // blocks inside cap their own width so they stay readable.
+    ['shell', 'w-full max-w-[84rem] mx-auto px-5 sm:px-8'],
     ['section', 'scroll-mt-28 mt-20 sm:mt-28'],
     [
       'section-title',
