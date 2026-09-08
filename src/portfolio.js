@@ -41,6 +41,15 @@ const projects = [
     image: 'HMS.png',
   },
   {
+    name: 'E-commerce Product API',
+    description:
+      'REST API for a product catalogue with full CRUD, JPA persistence and interactive Swagger documentation',
+    stack: ['SpringBoot', 'RestAPI', 'MySQL', 'Swagger'],
+    sourceCode: 'https://github.com/CSKing666/ecom',
+    // livePreview: '',
+    image: 'Ecom.jpg',
+  },
+  {
     name: 'Portfolio',
     description:
       'Built a Personal website using below Tech Stack',
