@@ -27,18 +27,18 @@ const projects = [
     description:
       'Built a Basic EMS System using below Tech Stack',
     stack: ['Servlets', 'JSP', 'SpringBoot'],
-    sourceCode: 'https://github.com',
+    sourceCode: 'https://github.com/CSKing666/EMS',
     // livePreview: 'https://github.com',
-    image: 'https://github.githubassets.com/assets/GitHub-Logo-ee398b662d42.png',
+    image: 'EMS.jpg',
   },
   {
     name: 'Hospital Management System',
     description:
       'Built a Basic HMS and performed CRUD operations through PostMan',
     stack: ['RestAPI', 'SpringBoot','PostMan'],
-    sourceCode: 'https://github.com',
+    sourceCode: 'https://github.com/CSKing666/HMS',
     // livePreview: 'https://github.com',
-    image: 'https://github.githubassets.com/assets/GitHub-Logo-ee398b662d42.png',
+    image: 'HMS.png',
   },
   {
     name: 'Portfolio',
