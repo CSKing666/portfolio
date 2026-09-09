@@ -1,21 +1,25 @@
 import { useEffect } from 'react'
 
 /**
- * A pixel cat that chases the cursor — a React port of oneko.js
- * (github.com/adryd325/oneko.js), itself a descendant of the 1989 Neko.
+ * A pixel cat that chases the cursor.
  *
- * Entirely client-side: a 32px div whose background-position steps through the
- * sprite sheet at 10fps. Nothing is fetched beyond the one GIF.
+ * Sprite sheet and behaviour follow oneko.js (github.com/adryd325/oneko.js),
+ * descended from the 1989 Neko. The motion, however, is decoupled from the
+ * sprite clock: oneko moves 10px once per animation frame at 10fps, which reads
+ * as teleporting. Here the position advances every rendered frame using elapsed
+ * time, while the sprite still flips at a retro 10fps.
  */
 
 const SPRITE_SIZE = 32
-const SPEED = 10
-// Below this distance the cat stops and starts idling, so it sits beside the
-// cursor rather than jittering underneath it.
+// Pixels per second. oneko's 10px every 100ms works out to the same speed —
+// it just delivered it in ten visible jumps.
+const SPEED = 120
+const SPRITE_INTERVAL = 100
+// Below this distance the cat settles beside the cursor rather than sitting
+// underneath it and jittering.
 const REST_DISTANCE = 48
 
-// Each entry is a list of [column, row] tiles in the sprite sheet; multi-tile
-// sets animate by cycling on alternate frames.
+// [column, row] tiles in the sheet; multi-tile sets alternate as frames advance.
 const SPRITE_SETS = {
   idle: [[-3, -3]],
   alert: [[-7, -3]],
@@ -81,8 +85,7 @@ const SPRITE_SETS = {
 
 const Neko = () => {
   useEffect(() => {
-    // Pointer-driven and purely decorative: skip it for touch input, and for
-    // anyone who has asked for reduced motion.
+    // Purely decorative and pointer-driven: skip for touch and reduced motion.
     const canRun =
       window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
       !window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -95,12 +98,15 @@ const Neko = () => {
       width: `${SPRITE_SIZE}px`,
       height: `${SPRITE_SIZE}px`,
       position: 'fixed',
+      top: '0',
+      left: '0',
       pointerEvents: 'none',
       imageRendering: 'pixelated',
-      left: '16px',
-      top: '16px',
       zIndex: '60',
       backgroundImage: `url(${import.meta.env.BASE_URL}images/oneko.gif)`,
+      // transform keeps movement on the compositor; left/top would force layout
+      // on every frame.
+      willChange: 'transform',
     })
     document.body.appendChild(el)
 
@@ -108,18 +114,22 @@ const Neko = () => {
     let nekoY = 32
     let mouseX = 32
     let mouseY = 32
-    let frameCount = 0
-    let idleTime = 0
+
+    let spriteFrame = 0
+    let spriteAccumulator = 0
+    let idleTicks = 0
+    let alertTicks = 0
     let idleAnimation = null
     let idleAnimationFrame = 0
-    let lastFrameTimestamp = null
+    let direction = 'idle'
+
+    let lastTimestamp = null
     let rafId = null
 
     const setSprite = (name, frame) => {
-      const sprite = SPRITE_SETS[name][frame % SPRITE_SETS[name].length]
-      el.style.backgroundPosition = `${sprite[0] * SPRITE_SIZE}px ${
-        sprite[1] * SPRITE_SIZE
-      }px`
+      const set = SPRITE_SETS[name] || SPRITE_SETS.idle
+      const [col, row] = set[frame % set.length]
+      el.style.backgroundPosition = `${col * SPRITE_SIZE}px ${row * SPRITE_SIZE}px`
     }
 
     const resetIdleAnimation = () => {
@@ -128,10 +138,9 @@ const Neko = () => {
     }
 
     const idle = () => {
-      idleTime += 1
+      idleTicks += 1
 
-      // After a few seconds of stillness, occasionally start a little routine.
-      if (idleTime > 10 && Math.floor(Math.random() * 200) === 0 && idleAnimation == null) {
+      if (idleTicks > 10 && Math.floor(Math.random() * 200) === 0 && idleAnimation == null) {
         const available = ['sleeping', 'scratchSelf']
         if (nekoX < 32) available.push('scratchWallW')
         if (nekoY < 32) available.push('scratchWallN')
@@ -164,53 +173,88 @@ const Neko = () => {
       idleAnimationFrame += 1
     }
 
-    const frame = () => {
-      frameCount += 1
-      const diffX = nekoX - mouseX
-      const diffY = nekoY - mouseY
-      const distance = Math.sqrt(diffX ** 2 + diffY ** 2)
+    // Runs at 10fps — sprite selection and the idle routines only.
+    const spriteTick = () => {
+      spriteFrame += 1
 
-      if (distance < SPEED || distance < REST_DISTANCE) {
+      if (direction === 'idle') {
         idle()
         return
       }
 
-      idleAnimation = null
-      idleAnimationFrame = 0
+      resetIdleAnimation()
 
-      // A brief "!" before giving chase, as in the original.
-      if (idleTime > 1) {
+      // A beat of surprise before giving chase, as in the original.
+      if (alertTicks > 0) {
+        alertTicks -= 1
         setSprite('alert', 0)
-        idleTime = Math.min(idleTime, 7)
-        idleTime -= 1
         return
       }
 
-      let direction = diffY / distance > 0.5 ? 'N' : ''
-      direction += diffY / distance < -0.5 ? 'S' : ''
-      direction += diffX / distance > 0.5 ? 'W' : ''
-      direction += diffX / distance < -0.5 ? 'E' : ''
-      setSprite(direction, frameCount)
+      idleTicks = 0
+      setSprite(direction, spriteFrame)
+    }
 
-      nekoX -= (diffX / distance) * SPEED
-      nekoY -= (diffY / distance) * SPEED
+    // Runs every rendered frame — position only.
+    const move = (delta) => {
+      const diffX = mouseX - nekoX
+      const diffY = mouseY - nekoY
+      const distance = Math.hypot(diffX, diffY)
 
-      // Keep it on screen even if the cursor leaves the viewport.
+      if (distance <= REST_DISTANCE) {
+        if (direction !== 'idle') {
+          direction = 'idle'
+          idleTicks = 0
+        }
+        return
+      }
+
+      // Coming out of a rest, freeze briefly on the alert frame.
+      if (direction === 'idle') {
+        alertTicks = 3
+        resetIdleAnimation()
+      }
+
+      const unitX = diffX / distance
+      const unitY = diffY / distance
+
+      let next = 'E'
+      if (unitY < -0.5) next = 'N'
+      else if (unitY > 0.5) next = 'S'
+      else next = ''
+      if (unitX > 0.5) next += 'E'
+      else if (unitX < -0.5) next += 'W'
+      direction = next || (unitX > 0 ? 'E' : 'W')
+
+      if (alertTicks > 0) return
+
+      // Stop at the rest ring rather than overshooting into a jitter.
+      const step = Math.min((SPEED * delta) / 1000, distance - REST_DISTANCE)
+      nekoX += unitX * step
+      nekoY += unitY * step
+
       nekoX = Math.min(Math.max(16, nekoX), window.innerWidth - 16)
       nekoY = Math.min(Math.max(16, nekoY), window.innerHeight - 16)
 
-      el.style.left = `${nekoX - 16}px`
-      el.style.top = `${nekoY - 16}px`
+      el.style.transform = `translate3d(${Math.round(nekoX - 16)}px, ${Math.round(
+        nekoY - 16
+      )}px, 0)`
     }
 
-    // The sprite animation is designed for 10fps; rAF keeps it in step with the
-    // display and pauses automatically in background tabs.
     const loop = (timestamp) => {
-      if (lastFrameTimestamp == null) lastFrameTimestamp = timestamp
-      if (timestamp - lastFrameTimestamp > 100) {
-        lastFrameTimestamp = timestamp
-        frame()
+      if (lastTimestamp == null) lastTimestamp = timestamp
+      // Clamp so a backgrounded tab does not resume with one enormous jump.
+      const delta = Math.min(timestamp - lastTimestamp, 100)
+      lastTimestamp = timestamp
+
+      move(delta)
+
+      spriteAccumulator += delta
+      while (spriteAccumulator >= SPRITE_INTERVAL) {
+        spriteAccumulator -= SPRITE_INTERVAL
+        spriteTick()
       }
+
       rafId = window.requestAnimationFrame(loop)
     }
 
@@ -219,6 +263,8 @@ const Neko = () => {
       mouseY = event.clientY
     }
 
+    el.style.transform = `translate3d(${nekoX - 16}px, ${nekoY - 16}px, 0)`
+    setSprite('idle', 0)
     document.addEventListener('mousemove', handleMouseMove, { passive: true })
     rafId = window.requestAnimationFrame(loop)
 
