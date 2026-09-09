@@ -5,6 +5,7 @@ import Skills from './components/Skills'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
+import Neko from './components/Neko'
 
 const App = () => (
   <div
@@ -22,6 +23,7 @@ const App = () => (
 
     <Footer />
     <ScrollToTop />
+    <Neko />
   </div>
 )
 
