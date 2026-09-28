@@ -7,11 +7,11 @@ const header = {
 const about = {
   // all the properties are optional - can be left empty or deleted
   name: 'Chandra Sekhar',
-  role: 'Data Engineer & Full Stack Developer',
+  role: 'Software Engineer',
   picture: 'CS.jpg',
 
   description:
-    'Data Engineer building the platform behind a US real-estate analytics product — Django and PostgreSQL services, high-throughput ETL and scraping pipelines across 5,000+ ZIP codes, and the internal React tools the sales team runs on. Previously a software engineer across billing, CRM and channel-management systems, on a full stack Java foundation. Currently open to new opportunities.',
+    'Software engineer building the platform behind a US real-estate analytics product — Django and PostgreSQL services, high-throughput ETL and scraping pipelines across 5,000+ ZIP codes, and the internal React tools the sales team runs on. Previously a software engineer across billing, CRM and channel-management systems, on a full stack Java foundation. Currently open to new opportunities.',
   resume: 'CS-Resume.pdf',
   social: {
     linkedin: 'https://www.linkedin.com/in/vannem-reddy-chandra-sekhar-337367429/',
@@ -63,7 +63,7 @@ const projects = [
 const skills = [
   // skills can be added or removed
   // if there are no skills, Skills section won't show up
-  // Ordered to match the Data Engineer positioning: data and backend first,
+  // Ordered to match the Software Engineer positioning: data and backend first,
   // then the Java/Spring stack, then web and tooling.
   'Python',
   'PostgreSQL',
